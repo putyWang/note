@@ -45,7 +45,7 @@
 	- 查看表结构：desc 表名；
 	- 查看表中数据：select*from 表名；
 	- 常用命令
-
+	
 		* 查看当前数据库：select database（）；
 		* 查看数据库版本号：select version（）；
 		
@@ -280,7 +280,7 @@
 		* 完整建表语句：最后设置存储引擎 Engine = 存储引擎 default  charset 字符集名；
 		* 在mysql中标识符可以使用‘括起来；
 		* 主要存储引擎：
-			
+			 
 			- MyISAM：
 			
 				* 三个文件组成一张表；
@@ -402,7 +402,7 @@
 			- 一对多：两张表，多的表加外键；
 			
 		* 提醒：在实际开发中，客户至上；
-		
+
 JDBC
 
 	- 通讯协议是提前订好的通讯格式（HTTP，jdbc:mysql:）；
@@ -463,7 +463,7 @@ JDBC
 			
 			- 在select语句后加上for update；
 			- 在当前事务执行过程中，其他事务无法对锁住事务进行修改；
-			
+
 Hibernate
 
 	- Session 类
@@ -655,7 +655,7 @@ Hibernate
 				* 两次加载OID相同对象时，分配的地址不同；
 				
 			- 通过HQL来进行批量操作；
-
+	
 				* 使用Query接口中executeUpdate()执行HQL语句；
 				
 			- 直接通过JDBC API进行批量操作；
