@@ -26,6 +26,28 @@ public class LinkList<E extends Number> {
     }
 
     /**
+    *@Description: 获取尾部元素
+    *@Param:
+    *@return:
+    */
+    public E getLast(){
+        if (null == last)
+            return null;
+        return last.e;
+    }
+
+    /**
+    *@Description: 获取头部元素
+    *@Param:
+    *@return:
+    */
+    public E getFirst(){
+        if (null == first)
+            return null;
+        return first.e;
+    }
+
+    /**
      *@Description: 向链表添加元素
      *@Param:
      *@return:
@@ -56,11 +78,24 @@ public class LinkList<E extends Number> {
     *@Param:
     *@return:
     */
-    public void remove(Node<E> node){
-        node.getPrevious().setNext(node.getNext());
-        node.getNext().setPrevious(node.getPrevious());
+    public void remove(int index)
+            throws IndexOutOfBoundsException{
+        if(index > length - 1 || index < 0)
+            throw new IndexOutOfBoundsException(String.valueOf(index));
+
+        if (index == length - 1){
+            last = last.getPrevious();
+            last.setNext(null);
+        }else {
+            Node<E> node = first;
+            for (int i = 0; i <= index; i++) {
+                node = node.next;
+            }
+            node.getPrevious().setNext(node.getNext());
+            node.getNext().setPrevious(node.getPrevious());
+        }
         //LinkList长度-1
-        length ++;
+        length --;
     }
 
     /**
