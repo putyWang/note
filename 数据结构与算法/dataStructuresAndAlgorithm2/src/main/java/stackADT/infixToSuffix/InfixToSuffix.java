@@ -68,7 +68,7 @@ public class InfixToSuffix {
      *@Param:
      *@return:
      */
-    Integer calculation (Character symbol, Integer a, Integer b){
+    Integer calculation (Character symbol, Integer b, Integer a){
         if (symbol.equals('*'))
 
             return a*b;
