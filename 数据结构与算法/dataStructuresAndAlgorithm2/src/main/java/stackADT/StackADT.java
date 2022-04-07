@@ -7,10 +7,17 @@ import listADT.LinkList;
  * @modified By：
  * @version: $
  */
-public class StackADT<E extends Number> {
+public class StackADT<E extends Object> {
     //栈的链表对象
     private LinkList<E> list;
 
+    //栈深度
+    private Integer high;
+
+    public StackADT(){
+        this.list = new LinkList<>();
+        high = 0;
+    }
     /**
     *@Description:实现push方法
     *@Param:
@@ -18,6 +25,16 @@ public class StackADT<E extends Number> {
     */
     public void push(E e){
         this.add(e);
+        high ++;
+    }
+
+    /**
+    *@Description: 获取栈深度
+    *@Param:
+    *@return:
+    */
+    public Integer getHigh(){
+        return high;
     }
 
     /**
@@ -31,6 +48,7 @@ public class StackADT<E extends Number> {
 
         E last = this.getLast();
         this.removeLast();
+        high --;
 
         return last;
     }
@@ -77,4 +95,5 @@ public class StackADT<E extends Number> {
     private void removeLast(){
         list.remove (list.length() - 1);
     }
+
 }

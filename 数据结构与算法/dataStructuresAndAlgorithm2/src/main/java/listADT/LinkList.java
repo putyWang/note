@@ -9,7 +9,7 @@ import java.util.Objects;
  * @modified By：
  * @version: $
  */
-public class LinkList<E extends Number> {
+public class LinkList<E extends Object> {
     //头结点
     private Node<E> first;
     //尾节点
@@ -82,10 +82,16 @@ public class LinkList<E extends Number> {
             throws IndexOutOfBoundsException{
         if(index > length - 1 || index < 0)
             throw new IndexOutOfBoundsException(String.valueOf(index));
-
-        if (index == length - 1){
-            last = last.getPrevious();
-            last.setNext(null);
+        else if (index == length - 1){
+            if(index == 0)
+                first = null;
+            else if (index == 1){
+                first.setNext(null);
+                last = null;
+            }else {
+                last = last.getPrevious();
+                last.setNext(null);
+            }
         }else {
             Node<E> node = first;
             for (int i = 0; i <= index; i++) {
