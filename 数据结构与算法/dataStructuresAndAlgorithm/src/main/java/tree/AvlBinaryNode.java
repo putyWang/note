@@ -1,5 +1,8 @@
 package tree;
 
+import java.util.HashSet;
+import java.util.TreeSet;
+
 /**
  * 平衡
  */
@@ -153,19 +156,19 @@ public class AvlBinaryNode <E extends Comparable> {
      * @param treeNode
      * @return
      */
-    private TreeNode<E> balance(TreeNode<E> treeNode){
+    private TreeNode<E> balance(TreeNode<E> treeNode) {
         if (treeNode == null)
 
             return null;
         if (height (treeNode.left) - height (treeNode.right) > ALLOWED_IMBALANCE){
-            if (height(treeNode.left.left) > height(treeNode.left.right))
+            if (height(treeNode.left.left) >= height(treeNode.left.right))
                 treeNode = rotateLeft (treeNode);
-            else if (height(treeNode.left.right) > height(treeNode.left.left))
+            else
                 treeNode = rotateDoubleLeft (treeNode);
         }else if (height (treeNode.right) - height (treeNode.left) > ALLOWED_IMBALANCE){
-            if (height(treeNode.right.right) > height(treeNode.right.left))
+            if (height(treeNode.right.right) >= height(treeNode.right.left))
                 treeNode = rotateRight (treeNode);
-            else if (height(treeNode.right.left) > height(treeNode.right.right))
+            else
                 treeNode = rotateDoubleRight (treeNode);
         }
 
@@ -181,8 +184,8 @@ public class AvlBinaryNode <E extends Comparable> {
         TreeNode k1 = k2.left;
         k2.left = k1.right;
         k1.right = k2;
-        k2.high = Math.max(height(k2.left), height(k2.right));
-        k1.high = Math.max(height(k1.left), k2.high);
+        k2.high = Math.max(height(k2.left), height(k2.right)) + 1;
+        k1.high = Math.max(height(k1.left), k2.high) + 1;
 
         return k1;
     }
@@ -242,15 +245,14 @@ public class AvlBinaryNode <E extends Comparable> {
         TreeNode left;
 
         /**
-         * 两节点高度差
+         * 节点高度
          * -1表示节点为空
-         * 0表示节点平衡
-         * 1表示节点差距为1
          */
         Integer high;
 
         public TreeNode(E e) {
             this.e = e;
+            high = 0;
         }
     }
 }
