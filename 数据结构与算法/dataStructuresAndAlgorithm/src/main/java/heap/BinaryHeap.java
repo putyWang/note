@@ -143,7 +143,7 @@ public class BinaryHeap <T extends Comparable<? super T>>{
     /**
      * 将最小值推到根节点
      */
-    public void percolate() {
+    private void percolate() {
         T temp;
         int child;
 
@@ -161,5 +161,47 @@ public class BinaryHeap <T extends Comparable<? super T>>{
 
                 break;
         }
+    }
+
+
+    private static int leftChild (int i) {
+        return i * 2;
+    }
+
+    /**
+     * 节点向下推函数
+     */
+    private void perDown() {
+
+        T temp;
+        int child;
+        int i = 1;
+
+        for (temp = array[i]; leftChild(i) < currentSize; i = child) {
+            child = leftChild(i);
+
+            if (child != currentSize - 1 && array[child].compareTo(array[child + 1]) < 0) {
+
+                child ++;
+            } if ( temp.compareTo(array[child]) < 0) {
+
+                array[i] = array[child];
+            } else
+                break;
+        }
+
+        array[i] = temp;
+
+    }
+
+    /**
+     * 节点交换函数
+     */
+    private void switchNode(T[] ts, int i, int j) {
+
+        T temp = ts[i];
+        ts[i] = ts[j];
+        ts[j] = temp;
+
     }
 }
