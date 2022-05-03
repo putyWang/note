@@ -1,5 +1,8 @@
 package sort;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 排序工具类
  */
@@ -152,6 +155,140 @@ public class SortUtil {
             quicksort(a, start + 1, right);
         }else {
             insertionSort(a, left, right);
+        }
+    }
+
+    /**
+     * 默认基数排序中桶数组大小
+     */
+    private final static int BUCKETS = 256;
+
+    /**
+     * 基数排序的实现
+     * @param arr
+     * @param stringLen
+     */
+    public static void radixSort(String[] arr, int stringLen) {
+
+        //设置桶，其中
+        ArrayList<String>[] buckets = new ArrayList[BUCKETS];
+
+        for (int i = 0; i < BUCKETS; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+
+        //从尾部向前依次添加元素
+        for (int pos = stringLen - 1; pos >= 0; pos --) {
+            for (String s : arr) {
+                buckets[s.charAt(pos)].add(s);
+            }
+
+            int idx = 0;
+            //按照排序后的顺序重新插入
+            for (ArrayList<String> bucket : buckets) {
+                for (String s : bucket) {
+                    arr[idx ++] = s;
+                }
+
+                bucket.clear();
+            }
+        }
+    }
+
+    /**
+     * 计数基数排序的实现
+     * @param arr
+     * @param stringLen
+     */
+    public static void countingRadixSort(String[] arr, int stringLen) {
+        int N = arr.length;
+        String[] buffer = new String[N];
+        //in代表arr
+        String[] in = arr;
+        //out代表临时数组buffer
+        String[] out = buffer;
+
+        for (int pos = stringLen - 1; pos >= 0; pos --) {
+            int[] count = new int[BUCKETS + 1];
+
+            //设置pos位置的count数组
+            for (int i = 0; i < N; i++) {
+                count[in[i].charAt(pos) + 1] ++;
+            }
+
+            //优化count数组
+            for (int i = 1; i < BUCKETS; i++) {
+                count[i] += count[i - 1];
+            }
+
+            //将重新排序
+            for (int i = 0; i < N; i++) {
+                out[count[in[i].charAt(pos)] ++] = in[i];
+            }
+
+            String[] tmp = in;
+            in = out;
+            out = tmp;
+        }
+
+        //如果arr数组是奇数，in是buffer，out是arr，换回来；
+        if (stringLen % 2 == 1) {
+            for (int i = 0; i < arr.length; i++) {
+                out[i] = in[i];
+            }
+        }
+    }
+
+    /**
+     * 变长字符串的基数排序的实现
+     * @param arr
+     * @param maxLen 最长字符串的长度
+     */
+    public static void LengthenRadixSort (String[] arr, int maxLen) {
+        //根据长度设置桶
+        ArrayList<String>[] wordsByLength = new ArrayList[maxLen + 1];
+        //所使用的桶
+        ArrayList<String>[] buckets = new ArrayList[BUCKETS];
+
+        for (int i = 0; i < maxLen + 1; i++) {
+            wordsByLength[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < BUCKETS; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+
+        //根据字符串长度添加到桶中
+        for (String s : arr) {
+            wordsByLength[s.length()].add(s);
+        }
+
+        //将arr中的数组按字符串长度进行排序
+        int idx = 0;
+        for (ArrayList<String> wordlist : wordsByLength) {
+            for (String s : wordlist) {
+                arr[idx ++] = s;
+            }
+        }
+
+        int startingIndex =  arr.length;
+
+        for (int pos = maxLen - 1; pos >= 0; pos --) {
+            startingIndex -= wordsByLength[pos + 1].size();
+
+            for (int i = startingIndex; i < arr.length ; i++) {
+                buckets[arr[i].charAt(pos)].add(arr[i]);
+            }
+
+            idx = startingIndex;
+
+            for (ArrayList<String> bucket : buckets) {
+                for (String s : bucket) {
+                    arr[idx ++] = s;
+                }
+
+                bucket.clear();
+            }
         }
     }
 
