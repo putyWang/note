@@ -1,6 +1,6 @@
 package graph.adjacencyList;
 
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * 邻接表实现
@@ -38,22 +38,59 @@ public class AdjacencyList<T> {
     /**
      * 拓扑排序
      */
-    public void topSort ()
+    public List<Vertex<T>> topSort ()
             throws Exception{
         LinkedList<Vertex<T>> vertices = copyList();
+        Queue<Vertex<T>> inDegreeZeroList = new ArrayDeque<>();
+        List<Vertex<T>> topSortList = new ArrayList<>();
+        int count = 0;
+
+        for (Vertex<T> vertex : vertices ) {
+            if (vertex.inDegreeNumber == 0) {
+                inDegreeZeroList.add(vertex);
+            }
+        }
+
+        while (! inDegreeZeroList.isEmpty()) {
+
+            Vertex<T> peek = inDegreeZeroList.peek();
+            topSortList.add(peek);
+            count ++;
+
+            for (Vertex<T> vertex : peek.outDegreeNode) {
+                if (-- vertex.inDegreeNumber == 0) {
+                    inDegreeZeroList.add(vertex);
+                }
+            }
+        }
+
+        return topSortList;
+    }
+
+    /**
+     * 广度优先搜索
+     */
+    public void unweighted (Vertex<T> s) {
+        LinkedList<Vertex<T>> vertices = copyList();
+
+        for (Vertex<T> vertex : vertices ) {
+            vertex.dist = Integer.MAX_VALUE;
+            vertex.know = false;
+        }
+
+        s.dist = 0;
 
         for (int i = 0; i < numVertex; i++) {
-            Vertex<T> vertex = findNewVertexOfInDegreeZero(vertices);
+            for (Vertex<T> vertex : vertices ) {
+                if (!vertex.know && vertex.dist == i) {
+                    vertex.know = true;
 
-            if (vertex == null) {
-                throw new Exception("该邻接表为圈");
+                    for (Vertex<T> v : vertex.outDegreeNode) {
+                        v.dist = i + 1;
+                        v.path = vertex;
+                    }
+                }
             }
-
-            for (Vertex<T> vertex1 : vertex.outDegreeNode) {
-                vertex1.inDegreeNumber --;
-            }
-
-            list.remove(vertex);
         }
     }
 
@@ -89,10 +126,11 @@ public class AdjacencyList<T> {
         return null;
     }
 
+
     /**
      * 邻接表节点实现
      */
-    class Vertex<T> {
+    static class Vertex<T> {
 
         /**
          * 节点数据
@@ -105,9 +143,24 @@ public class AdjacencyList<T> {
         Integer inDegreeNumber;
 
         /**
+         * 前一节点
+         */
+        Vertex<T> path;
+
+        /**
          * 出度表
          */
         LinkedList<Vertex<T>> outDegreeNode;
+
+        /**
+         * 标记顶点是否被遍历
+         */
+        Boolean know;
+
+        /**
+         * 与起点距离
+         */
+        Integer dist;
 
         public Vertex() {
         }
