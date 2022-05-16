@@ -1,5 +1,7 @@
 package graph.adjacencyList;
 
+import heap.BinaryHeap;
+
 import java.util.*;
 
 /**
@@ -57,9 +59,9 @@ public class AdjacencyList<T> {
             topSortList.add(peek);
             count ++;
 
-            for (Vertex<T> vertex : peek.outDegreeNode) {
-                if (-- vertex.inDegreeNumber == 0) {
-                    inDegreeZeroList.add(vertex);
+            for (Edge<T> edge : peek.edges) {
+                if (-- edge.v.inDegreeNumber == 0) {
+                    inDegreeZeroList.add(edge.v);
                 }
             }
         }
@@ -85,9 +87,9 @@ public class AdjacencyList<T> {
                 if (!vertex.know && vertex.dist == i) {
                     vertex.know = true;
 
-                    for (Vertex<T> v : vertex.outDegreeNode) {
-                        v.dist = i + 1;
-                        v.path = vertex;
+                    for (Edge<T> edge : vertex.edges) {
+                        edge.v.dist = i + 1;
+                        edge.v.path = vertex;
                     }
                 }
             }
@@ -130,7 +132,7 @@ public class AdjacencyList<T> {
     /**
      * 邻接表节点实现
      */
-    static class Vertex<T> {
+    static class Vertex<T> implements Comparable<Vertex<T> > {
 
         /**
          * 节点数据
@@ -150,7 +152,7 @@ public class AdjacencyList<T> {
         /**
          * 出度表
          */
-        LinkedList<Vertex<T>> outDegreeNode;
+        LinkedList<Edge<T>> edges;
 
         /**
          * 标记顶点是否被遍历
@@ -165,14 +167,46 @@ public class AdjacencyList<T> {
         public Vertex() {
         }
 
-        public Vertex(T t, Integer inDegreeNumber, LinkedList<Vertex<T>> outDegreeNode) {
+        public Vertex(T t, Integer inDegreeNumber, LinkedList<Edge<T>> edges) {
             this.t = t;
             this.inDegreeNumber = inDegreeNumber;
-            this.outDegreeNode = outDegreeNode;
+            this.edges = edges;
         }
 
         Vertex<T> copy () {
-            return new Vertex<T>(t,inDegreeNumber,outDegreeNode);
+            return new Vertex<T>(t,inDegreeNumber,edges);
+        }
+
+        @Override
+        public int compareTo(Vertex<T> vertex) {
+            return dist - vertex.dist;
+        }
+    }
+
+    /**
+     * 带权边对象
+     */
+    static class Edge<T>
+            implements Comparable<Edge<T>> {
+
+        /**
+         * u节点（起点边）
+         */
+        public Vertex<T> u;
+
+        /**
+         * v节点（终点边）
+         */
+        public Vertex<T> v;
+
+        /**
+         * 边权重
+         */
+        public Integer weight;
+
+        @Override
+        public int compareTo(Edge<T> tEdge) {
+            return weight - tEdge.weight;
         }
     }
 }
