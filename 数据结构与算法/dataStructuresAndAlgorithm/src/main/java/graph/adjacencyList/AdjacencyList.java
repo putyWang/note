@@ -97,6 +97,31 @@ public class AdjacencyList<T> {
     }
 
     /**
+     * 深度优先搜索实现
+     */
+    public void findArt(Vertex<T> vertex, int count) {
+        vertex.know = true;
+        vertex.low = vertex.num = count ++;
+
+        for (Edge<T> edge : vertex.edges) {
+            Vertex<T> w = edge.v;
+            if (w.know != true) {
+                w.path = vertex;
+                findArt(w, count);
+
+                if (w.low >= vertex.num) {
+                    System.out.println(vertex + "是割点");
+                }
+
+                vertex.low = Math.min(vertex.low, w.low);
+            } else if (vertex.path != w) {
+
+                vertex.low = Math.min(vertex.low, w.num);
+            }
+        }
+    }
+
+    /**
      * 复制图
      * @return
      */
@@ -145,6 +170,16 @@ public class AdjacencyList<T> {
         Integer inDegreeNumber;
 
         /**
+         * 当前节点索引
+         */
+        Integer num;
+
+        /**
+         * 树最小节点索引
+         */
+        Integer low;
+
+        /**
          * 前一节点
          */
         Vertex<T> path;
@@ -188,11 +223,6 @@ public class AdjacencyList<T> {
      */
     static class Edge<T>
             implements Comparable<Edge<T>> {
-
-        /**
-         * u节点（起点边）
-         */
-        public Vertex<T> u;
 
         /**
          * v节点（终点边）
